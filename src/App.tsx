@@ -1,7 +1,7 @@
-import { Button } from './components/ui/button';
+import UsersPage from './pages/users';
 
 function App() {
-  return <Button className="text-3xl font-bold underline">Hello world!</Button>;
+  return <UsersPage />;
 }
 
 export default App;
