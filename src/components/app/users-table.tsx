@@ -7,28 +7,45 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { mockUsers } from '@/mocks/mocks';
+import type { Users } from '@/types/types';
 
 import type { ReactElement } from 'react';
 
-export default function UsersTable(): ReactElement {
+export default function UsersTable({
+  usersData,
+}: {
+  usersData: Users;
+}): ReactElement {
   return (
-    <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
-      <TableHeader>
+    <Table className="mb-4">
+      <TableCaption className="caption-top mb-4">
+        A list of all users.
+      </TableCaption>
+      <TableHeader className="hidden md:table-header-group">
         <TableRow>
-          <TableHead className="w-[100px]">Name</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Role</TableHead>
+          <TableHead className="border-1 border-solid border-black md:border-none">
+            Name
+          </TableHead>
+          <TableHead className="border-1 border-solid border-black md:border-none">
+            Email
+          </TableHead>
+          <TableHead className="border-1 border-solid border-black md:border-none">
+            Role
+          </TableHead>
         </TableRow>
       </TableHeader>
-      <TableBody>
-        {mockUsers.map((mockUser) => {
+      <TableBody className="grid md:table-row-group">
+        {usersData.map((user) => {
           return (
-            <TableRow key={mockUser.id}>
-              <TableCell className="font-medium">{mockUser.name}</TableCell>
-              <TableCell>{mockUser.email}</TableCell>
-              <TableCell>{mockUser.role}</TableCell>
+            <TableRow
+              key={user.id}
+              className="border-1 border-solid border-black rounded mb-2 last:mb-0 last:border-1 last:border-solid last:border-black"
+            >
+              <TableCell className="block md:table-cell">{user.name}</TableCell>
+              <TableCell className="block md:table-cell">
+                {user.email}
+              </TableCell>
+              <TableCell className="block md:table-cell">{user.role}</TableCell>
             </TableRow>
           );
         })}

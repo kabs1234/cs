@@ -8,11 +8,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { mockUsers } from '@/mocks/mocks';
 
 export default function UsersPage(): ReactElement {
   return (
-    <>
-      <div className="flex mb-5">
+    <div className="mr-4 ml-4">
+      <div className="flex mb-5 mt-5">
         <Select>
           <SelectTrigger className="mr-auto">
             <SelectValue placeholder="Filter by role" />
@@ -26,7 +27,7 @@ export default function UsersPage(): ReactElement {
 
         <AddUserForm />
       </div>
-      <UsersTable />
-    </>
+      <UsersTable usersData={mockUsers} />
+    </div>
   );
 }
