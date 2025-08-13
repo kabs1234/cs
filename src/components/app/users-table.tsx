@@ -7,19 +7,37 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { Users } from '@/types/types';
+import { getRoleCaptionString } from '@/lib/utils';
+import type { ActiveRoleFilter, Users } from '@/types/types';
 
 import type { ReactElement } from 'react';
 
 export default function UsersTable({
   usersData,
+  activeRoleFilter,
 }: {
   usersData: Users;
+  activeRoleFilter: ActiveRoleFilter;
 }): ReactElement {
+  const filteredUsers = usersData.filter((user) => {
+    if (activeRoleFilter !== 'none') {
+      return user.role === activeRoleFilter;
+    }
+
+    return user;
+  });
+
+  const roleCaptionString =
+    filteredUsers.length > 0
+      ? getRoleCaptionString(activeRoleFilter)
+      : `${
+          activeRoleFilter.charAt(0).toUpperCase() + activeRoleFilter.slice(1)
+        } list is empty. Try to look for different roles!`;
+
   return (
     <Table className="mb-4">
       <TableCaption className="caption-top mb-4">
-        A list of all users.
+        {roleCaptionString}
       </TableCaption>
       <TableHeader className="hidden md:table-header-group">
         <TableRow>
@@ -35,7 +53,7 @@ export default function UsersTable({
         </TableRow>
       </TableHeader>
       <TableBody className="grid md:table-row-group">
-        {usersData.map((user) => {
+        {filteredUsers.map((user) => {
           return (
             <TableRow
               key={user.id}
