@@ -4,13 +4,17 @@ import { useState, type ReactElement } from 'react';
 
 import { mockUsers } from '@/mocks/mocks';
 import RoleFilter from '@/components/app/role-filter';
-import { type ActiveRoleFilter, type Users } from '@/types/types';
+import { type ActiveRoleFilter, type User, type Users } from '@/types/types';
 
 export default function UsersPage(): ReactElement {
   const [activeRoleFilter, setActiveRoleFilter] =
     useState<ActiveRoleFilter>('none');
 
   const [usersData, setUsersData] = useState<Users>(mockUsers);
+
+  const onAddUserSubmit = (userData: User): void => {
+    setUsersData([...usersData, userData]);
+  };
 
   return (
     <div className="mr-4 ml-4">
@@ -21,7 +25,7 @@ export default function UsersPage(): ReactElement {
           disabled={usersData.length === 0}
         />
 
-        <AddUserForm />
+        <AddUserForm onAddUserSubmit={onAddUserSubmit} />
       </div>
 
       {usersData.length !== 0 ? (
