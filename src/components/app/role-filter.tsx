@@ -28,7 +28,7 @@ export default function RoleFilter({
       value={activeRoleFilter}
       disabled={disabled}
     >
-      <SelectTrigger className="mr-auto">
+      <SelectTrigger className="mb-5 md:mb-0 md:mr-auto">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

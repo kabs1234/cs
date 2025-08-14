@@ -7,37 +7,114 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { getRoleCaptionString } from '@/lib/utils';
-import type { ActiveRoleFilter, Users } from '@/types/types';
+import {
+  UserRole,
+  type ActiveRoleFilter,
+  type SearchParameters,
+  type Users,
+} from '@/types/types';
 
 import type { ReactElement } from 'react';
+
+const getRoleFilterString = (activeRoleFilter: ActiveRoleFilter): string => {
+  switch (activeRoleFilter) {
+    case UserRole.User:
+      return 'Users list';
+    case UserRole.Admin:
+      return 'Admins list';
+    case UserRole.Manager:
+      return 'Managers list';
+    case 'none':
+      return 'A list of all users.';
+    default:
+      return 'Unknown list.';
+  }
+};
+
+const getRoleFilterCaption = (
+  filteredUsersLength: number,
+  activeRoleFilter: ActiveRoleFilter
+): string => {
+  if (filteredUsersLength === 0) {
+    return `${
+      activeRoleFilter.charAt(0).toUpperCase() + activeRoleFilter.slice(1)
+    } list is empty. Try to look for different roles!`;
+  }
+
+  return getRoleFilterString(activeRoleFilter);
+};
+
+const getSearchFilterCaption = (
+  filteredUsersLength: number,
+  searchQuery: string,
+  searchParameter: SearchParameters
+): string => {
+  if (filteredUsersLength === 0) {
+    return `Haven't found any results on '${searchQuery}' ${searchParameter}. Please try again!`;
+  }
+
+  return `Search results on '${searchQuery}' ${searchParameter} is:`;
+};
+
+const getFilterResultsCaption = (
+  filteredUsersLength: number,
+  searchQuery: string,
+  activeRoleFilter: ActiveRoleFilter,
+  searchParameter: SearchParameters
+): string => {
+  if (searchQuery.length === 0) {
+    return getRoleFilterCaption(filteredUsersLength, activeRoleFilter);
+  }
+
+  return getSearchFilterCaption(
+    filteredUsersLength,
+    searchQuery,
+    searchParameter
+  );
+};
 
 export default function UsersTable({
   usersData,
   activeRoleFilter,
+  searchQuery,
+  searchParameter,
 }: {
   usersData: Users;
   activeRoleFilter: ActiveRoleFilter;
+  searchQuery: string;
+  searchParameter: SearchParameters;
 }): ReactElement {
-  const filteredUsers = usersData.filter((user) => {
-    if (activeRoleFilter !== 'none') {
-      return user.role === activeRoleFilter;
-    }
+  const filteredUsers = usersData
+    .filter((user) => {
+      if (activeRoleFilter !== 'none') {
+        return user.role === activeRoleFilter;
+      }
 
-    return user;
-  });
+      return user;
+    })
+    .filter((user) => {
+      if (searchQuery.length === 0) {
+        return user;
+      }
 
-  const roleCaptionString =
-    filteredUsers.length > 0
-      ? getRoleCaptionString(activeRoleFilter)
-      : `${
-          activeRoleFilter.charAt(0).toUpperCase() + activeRoleFilter.slice(1)
-        } list is empty. Try to look for different roles!`;
+      if (
+        user[searchParameter]
+          .toLowerCase()
+          .startsWith(searchQuery.toLowerCase())
+      ) {
+        return user;
+      }
+    });
 
   return (
     <Table className="mb-4">
       <TableCaption className="caption-top mb-4">
-        {roleCaptionString}
+        {getFilterResultsCaption(
+          filteredUsers.length,
+          searchQuery,
+          activeRoleFilter,
+          searchParameter
+        )}
       </TableCaption>
       <TableHeader className="hidden md:table-header-group">
         <TableRow>

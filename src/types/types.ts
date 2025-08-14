@@ -14,3 +14,5 @@ export enum UserRole {
 }
 
 export type ActiveRoleFilter = UserRole | 'none';
+
+export type SearchParameters = 'name' | 'email';
