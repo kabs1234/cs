@@ -1,6 +1,6 @@
 import AddUserForm from '@/components/app/add-user-form';
 import UsersTable from '@/components/app/users-table';
-import { useState, type ReactElement } from 'react';
+import { useEffect, useState, type ReactElement } from 'react';
 
 import { mockUsers } from '@/mocks/mocks';
 import RoleFilter from '@/components/app/role-filter';
@@ -11,6 +11,20 @@ import {
   type Users,
 } from '@/types/types';
 import { SeachUser } from '@/components/app/search-user';
+
+const setLocalStorageUsers = (users: Users): void => {
+  return localStorage.setItem('users', JSON.stringify(users));
+};
+
+const getLocalStorageUsers = (): Users | void => {
+  const localStorageUsers = localStorage.getItem('users');
+
+  if (!localStorageUsers) {
+    return;
+  }
+
+  return JSON.parse(localStorageUsers);
+};
 
 export default function UsersPage(): ReactElement {
   const [activeRoleFilter, setActiveRoleFilter] =
@@ -23,7 +37,18 @@ export default function UsersPage(): ReactElement {
 
   const onAddUserSubmit = (userData: User): void => {
     setUsersData([...usersData, userData]);
+    setLocalStorageUsers([...usersData, userData]);
   };
+
+  useEffect(() => {
+    const localStorageUsers = getLocalStorageUsers();
+
+    if (localStorageUsers) {
+      setUsersData(localStorageUsers);
+    } else {
+      setLocalStorageUsers(mockUsers);
+    }
+  }, []);
 
   return (
     <div className="mr-4 ml-4">
