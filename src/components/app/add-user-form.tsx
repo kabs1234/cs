@@ -69,16 +69,13 @@ export default function AddUserForm({
       email: '',
       role: undefined,
     },
-    mode: 'all',
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (form.formState.isValid) {
-      onAddUserSubmit({
-        id: getRandomInt(0, 10000),
-        ...values,
-      });
-    }
+    onAddUserSubmit({
+      id: getRandomInt(0, 10000),
+      ...values,
+    });
   };
 
   return (
@@ -101,7 +98,7 @@ export default function AddUserForm({
                   <FormItem>
                     <FormLabel>Full Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Pedro Duarte" {...field} required />
+                      <Input placeholder="Pedro Duarte" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -114,11 +111,7 @@ export default function AddUserForm({
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="example@example.com"
-                        {...field}
-                        required
-                      />
+                      <Input placeholder="example@example.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -134,7 +127,6 @@ export default function AddUserForm({
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
-                        required
                       >
                         <SelectTrigger className="w-[180px]">
                           <SelectValue placeholder="Select a role" />
